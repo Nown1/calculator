@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>贷款计算器</title>
+    <style>
+        body {
+            background-image: url("../img/4.jpg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+
+        .panel {
+            /*定义面板*/
+            border: 4px solid #ddd;
+            width: 440px;
+            height: 630px;
+            margin:  auto;
+            /*border-radius: 6px;*/
+        }
+
+        .button {
+            width: 100px;
+            height: 50px;
+            color: white;
+            background-color: green;
+            margin: 20px 30px;
+            margin-left: 50px;
+            margin-righ: 50px;
+        }
+        .in{
+            margin-top: 10px;
+            width: 280px;
+            alignment: right;
+        }
+
+    </style>
+    <script>
+
+        var method = "";
+
+        function setMethod(obj) {
+            method =""+ obj.value;
+        }
+
+        function calculate() {
+            var principle = parseFloat(document.getElementById("principle").value);
+            var months = parseFloat(document.getElementById("months").value);
+            var rate = parseFloat(document.getElementById("rate").value);
+            var repayment = document.getElementById("repayment");
+            var interest = document.getElementById("interest");
+            var totalRepayment = document.getElementById("totalRepayment");
+            var totalInterest = document.getElementById("totalInterest");
+
+            try{
+                //数据预处理
+                principle *= 10000;
+                months *= 12;
+                rate *= 0.01;
+
+                if (method == "1") {
+                    // alert("等额本息");
+                    // alert("本金="+principle+"; 月数="+months+"; 利率="+rate);
+
+                        //月均还款
+                        var rep = (principle * rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months)-1);
+                        repayment.innerHTML = rep.toFixed(2).toString();
+
+                        //月均利息
+                        var str = "";
+                        var y=0;
+                        for (var i = 1; i <=months; i++) {
+                            y= principle * rate * (Math.pow(1 + rate, months) - Math.pow(1 + rate, i-1)) / (Math.pow(1 + rate, months)-1);
+                            str += y.toFixed(2).toString() +",";
+                        }
+                        interest.innerHTML = str;
+
+                        //还款总额
+                        totalRepayment.innerHTML = (months * rep).toString();
+
+                        //总利息
+                        totalInterest.innerHTML=(months * rep-principle).toString();
+
+                } else  {
+                    // alert("等额本金");
+                    // alert("本金="+principle+"; 月数="+months+"; 利率="+rate);
+
+                        //月均还款
+                        var paid=0;//累计已还款金额
+                        var str1="";//记录月均还款
+                        var str2="";//记录月均利息
+                        var x=0;//月均还款
+                        var y=0;//月均利息
+                        var z=0;//总利息
+
+                        for (var i=0;i<months;i++){
+                            x=(principle/months)+(principle-paid)*rate;
+                            str1+=x.toFixed(2).toString()+",";
+                            y=(principle-paid)*rate;
+                            str2+=y.toFixed(2).toString()+",";
+                            paid+=y;
+                        }
+                        z=(((principle/months)+(principle*rate)+(principle*(1+rate)/months))/2)*months-principle;
+                        //月均还款
+                        repayment.innerHTML=str1;
+
+                        //月均利息
+                        interest.innerHTML=str2;
+
+                        //还款总额
+                        totalRepayment.innerHTML=paid.toFixed(2).toString();
+
+                        //总利息
+                        totalInterest.innerHTML=z;
+
+                }
+
+            }catch (e) {
+            repayment.innerHTML = "错误";
+            interest.innerHTML="错误";
+            totalInterest.innerHTML = "错误";
+            totalRepayment.innerHTML = "错误";
+            }
+
+        }
+
+    </script>
+</head>
+<body>
+
+<form action="/">
+    <a href="/Business">商务计算器</a><br/>
+    <a href="/Simple" >四则计算器</a><br/>
+    <a href="/Science">科学计算器</a><br/>
+    <a href="/Loan">贷款计算器</a><br/>
+    <a href="/Base">进制计算器</a>
+</form>
+
+<div class="panel" id="jsq">
+    <div>
+        <h3 align="center">贷款计算器</h3>
+        <hr>
+        还款方式：
+        <input type="radio" name="radio" value="1" onclick="setMethod(this)"/>等额本息
+        <input type="radio" name="radio" value="2" onclick="setMethod(this)"/>等额本金
+        <br/>
+        贷款年限（年）：
+        <input class="in" type="text" id="months"><br/>
+        贷款金额（万元）:
+        <input class="in" type="text" id="principle" ><br/>
+        贷款利率（%）：
+        <input class="in" type="text" id="rate"><br/>
+        <input type="button" value="计算" class="button" onclick="calculate()">
+        <input type="button" value="重新计算" class="button" onclick="calculate()">
+        <div style="clear:both"></div>
+    </div>
+    <div>
+        月均还款（元）：<br/>
+        <p id="repayment"></p>
+        月均利息（元）：<br/>
+        <p id="interest"></p>
+        利息总额（元）：<br/>
+        <p id="totalInterest"></p>
+        还款总额（元）：<br/>
+        <p id="totalRepayment"></p>
+        <div style="clear:both"></div>
+    </div>
+
+
+</div>
+</body>
+</html>

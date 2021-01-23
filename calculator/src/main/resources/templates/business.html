@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商务计算器</title>
+    <style>
+        body{
+            background-image: url("../img/2.jpg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+        .panel {
+            /*定义面板*/
+            border: 4px solid #ddd;
+            width: 440px;
+            height: 420px;
+            margin:  auto;
+            /*border-radius: 6px;*/
+        }
+        .panel p, .panel input {
+            /*定义字体*/
+            font-family: "微软雅黑";
+            font-size: 20px;
+            margin: 4px;
+            float: left;
+            /*border-radius: 4px;*/
+        }
+        .panel p {
+            /*定义输入框*/
+            width: 410px;
+            height: 26px;
+            border: 1px solid #ddd;
+            padding: 6px;
+            overflow: hidden;
+        }
+        .panel input {
+            /*按钮大小*/
+            width: 100px;
+            height: 50px;
+            border:1px solid #ddd;
+            align-content: center;
+        }
+    </style>
+    <script>
+        window.onload = function (){
+            //获取事件目标节点(整个div)
+            var div = document.getElementById("jsq");
+            //给事件目标节点后绑定事件
+            var num="0";//记录操作数
+            var res="0";//记录结果
+            var operator=" ";//记录运算符
+            var p=document.getElementById("screen");//获取显示屏
+
+            function calculate(){//执行计算操作
+                //1.将 "0"+屏幕显示的数字先存到num里面，
+                //2.把num，res分别化为float数number，result
+                //3.执行运算
+                num="0"+p.innerHTML;
+                var number =parseFloat(num);
+                var result=parseFloat(res);
+                if(operator=="+"){
+                    result+=number;
+                    operator="";
+                }else if(operator=="-"){
+                    result-=number;
+                    operator="";
+                }else if(operator=="*"){
+                    result*=number;
+                    operator="";
+                }else if(operator=="/"){
+                    if(number==0){
+                        result="Error";
+                        operator="";
+                    }
+                    result/=number;
+                    operator="";
+                }else {
+                    result=number;
+                    operator="";
+                }
+                // alert(num+";"+number+";"+res+";"+result+";"+operator);
+                return result;
+            }
+            function setOperator(a){//置运算符
+                //需要执行：1.将符号复制给operator变量
+                // 2.将 "0"+显示屏字符串 赋值给res
+                // 3.将显示屏清空
+                operator=a;
+                res="0"+p.innerHTML;
+                p.innerHTML="";
+            }
+            function clear(){//清零方法
+                p.innerHTML="";
+                num="0";
+                res="0";
+            }
+            function back(){//退格方法
+                p.innerHTML=p.innerHTML.slice(0,p.innerHTML.length-1);
+            }
+            function setStr(a){//置数方法,需要执行以下步骤：
+                //1.将
+                p.innerHTML+=a;
+            }
+            div.onclick = function (e){
+                //获取事件源
+                var obj = e.srcElement||e.target;
+                //获取显示屏
+                // var p = document.getElementById("screen");
+                //若用户点击的区域是input便执行以下方法
+                if(obj.nodeName=="INPUT"){
+                    if(obj.value=="C"){
+                        // p.innerHTML = "";
+                        clear();
+                    }else if(obj.value=="DEL"){
+                        // p.innerHTML=p.innerHTML.slice(0,p.innerHTML.length-1)
+                        back();
+                    }else if(obj.value=="="){
+                            p.innerHTML = calculate().toString();
+                    }else if(obj.value=="+"||obj.value=="-"||obj.value=="*"||obj.value=="/"){
+                        setOperator(obj.value);
+                    }else{
+                        p.innerHTML += obj.value;
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+
+<form action="/">
+    <a href="/Business">商务计算器</a><br/>
+    <a href="/Simple" >四则计算器</a><br/>
+    <a href="/Science">科学计算器</a><br/>
+    <a href="/Loan">贷款计算器</a><br/>
+    <a href="/Base">进制计算器</a>
+</form>
+
+<div class="panel" id="jsq">
+    <div>
+        <h3 align="center">商务计算器</h3>
+        <hr>
+        <p id="screen"></p>
+        <input type="button" value="C" onclick="clear()">
+        <input type="button" value="DEL" onclick="back()">
+        <div style="clear:both"></div>
+    </div>
+    <div>
+        <input type="button" value="7">
+        <input type="button" value="8">
+        <input type="button" value="9">
+        <input type="button" value="/">
+
+        <input type="button" value="4" >
+        <input type="button" value="5" >
+        <input type="button" value="6" >
+        <input type="button" value="*" >
+
+        <input type="button" value="1" >
+        <input type="button" value="2" >
+        <input type="button" value="3" >
+        <input type="button" value="-">
+
+        <input type="button" value="0" >
+        <input type="button" value="." >
+        <input type="button" value="=">
+        <input type="button" value="+">
+
+        <div style="clear:both"></div>
+    </div>
+</div>
+</body>
+</html>

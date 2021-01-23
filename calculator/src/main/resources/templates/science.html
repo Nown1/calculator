@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html  lang="zh"
+       xmlns:th="http://www.thymeleaf.org">
+<head >
+    <title>四则计算器</title>
+    <meta charset="utf-8" />
+    <style>
+        body{
+            background-image: url("../img/3.jpg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+        .panel {
+            /*定义面板*/
+            border: 4px solid #ddd;
+            width: 540px;
+            height: 630px;
+            margin: auto;
+            /*border-radius: 6px;*/
+        }
+        .panel p, .panel input {
+            /*定义字体*/
+            font-family: "微软雅黑";
+            font-size: 20px;
+            margin: 4px;
+            float: left;
+            /*border-radius: 4px;*/
+        }
+        .panel p {
+            /*定义输入框*/
+            width: 510px;
+            height: 26px;
+            border: 1px solid #ddd;
+            padding: 6px;
+            overflow: hidden;
+        }
+        .panel input {
+            /*按钮大小*/
+            width: 100px;
+            height: 50px;
+            border:1px solid #ddd;
+            align-content: center;
+
+        }
+    </style>
+    <script>
+
+        window.onload = function () {
+            //获取事件目标节点(整个div)
+            var div = document.getElementById("jsq");
+            //获取输入栏
+            var p=document.getElementById("question");
+            //获取答案栏
+            var q=document.getElementById("answer");
+            var exp="";//用于存放转换后的表达式
+
+            //使用Ajax发送异步请求获取结果并修改答案栏文字
+            function calculate()
+            {
+                var xmlhttp;
+                if (window.XMLHttpRequest)
+                {
+                    // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+                    xmlhttp=new XMLHttpRequest();
+                }
+                else
+                {
+                    // IE6, IE5 浏览器执行代码
+                    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange=function()
+                {
+                    if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                    {
+                        q.innerHTML=xmlhttp.responseText;
+                    }
+                }
+
+                //直接令url="/Simple?question=" +p.innerHTML 会导致url中部分字符丢失，比如+ -
+                //使用encodeURI(encodeURIComponent(url))方法可以将url转化为utf-8编码形式，
+                //用%2F代替/，用%2B代替+，但是在请求服务器的时候，请求路径前面必须是/，
+                //因此只要把p.innerHTML进行编码即可，然后和请求路径拼接起来
+                //后端接受到的数据是utf-8编码的，因此还要进行解码
+                //方法是：String q=java.net.URLDecoder.decode(question,"UTF-8");
+                //注意用try-catch捕获异常
+
+                var url="/Science?question=" +encodeURI(encodeURIComponent(exp));
+                xmlhttp.open("POST",url,true);
+                xmlhttp.send();
+            }
+
+            div.onclick = function (e){
+                //获取事件源
+                var obj = e.srcElement||e.target;
+                //若用户点击的区域是input便执行以下方法
+                if(obj.nodeName=="INPUT"){
+                    if(obj.id=="AC"){
+                        p.innerHTML = "";
+                        q.innerHTML="";
+                        exp="";
+                    }else if(obj.id=="DEL"){
+                        p.innerHTML=p.innerHTML.slice(0,p.innerHTML.length-1)
+                        exp=exp.slice(0,exp.length-1);
+                    }else if(obj.id=="="){
+                        // alert(exp);
+                        calculate();
+
+                    }else{
+                        p.innerHTML += obj.value;
+                        exp+=obj.id;
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body >
+
+<form action="/">
+    <a href="/Business">商务计算器</a><br/>
+    <a href="/Simple" >四则计算器</a><br/>
+    <a href="/Science">科学计算器</a><br/>
+    <a href="/Loan">贷款计算器</a><br/>
+    <a href="/Base">进制计算器</a>
+</form>
+
+<div class="panel" id="jsq">
+    <div>
+        <h2 align="center" >科学计算器</h2>
+        <hr>
+        <h3>输入：</h3><p id="question"></p>
+        <h3>结果：</h3><p id="answer" ></p>
+        <input type="button" value="arcsin" id="i">
+        <input type="button" value="arccos" id="o">
+        <input type="button" value="arctan" id="n">
+        <input type="button" value="abs" id="a">
+        <input type="button" value="sqrt" id="q">
+        <div style="clear:both"></div>
+    </div>
+    <div>
+        <input type="button" value="sin" id="s">
+        <input type="button" value="cos" id="c">
+        <input type="button" value="tan" id="t">
+        <input type="button" value="PI" id="p">
+        <input type="button" value="^" id="^">
+
+        <input type="button" value="7" id="7">
+        <input type="button" value="8" id="8">
+        <input type="button" value="9" id="9">
+        <input type="button" value="+" id="+">
+        <input type="button" value="-" id="-">
+
+        <input type="button" value="4" id="4">
+        <input type="button" value="5" id="5">
+        <input type="button" value="6" id="6">
+        <input type="button" value="*" id="*">
+        <input type="button" value="/" id="/">
+
+        <input type="button" value="1" id="1">
+        <input type="button" value="2" id="2">
+        <input type="button" value="3" id="3">
+        <input type="button" value="(" id="(">
+        <input type="button" value=")" id=")">
+
+        <input type="button" value="0" id="0">
+        <input type="button" value="." id=".">
+        <input type="button" value="=" id="=">
+        <input type="button" value="AC" id="AC">
+        <input type="button" value="DEL" id="DEL">
+
+
+        <div style="clear:both"></div>
+    </div>
+</div>
+</body>
+</html>

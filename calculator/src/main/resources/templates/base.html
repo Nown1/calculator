@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>进制计算器</title>
+    <style>
+        body {
+            background-image: url("../img/5.jpg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+
+        .panel {
+            /*定义面板*/
+            border: 4px solid #ddd;
+            width: 440px;
+            height: 500px;
+            margin:  auto;
+            alignment: center;
+            /*border-radius: 6px;*/
+        }
+
+        .button {
+            width: 360px;
+            height: 30px;
+            color: white;
+            background-color: green;
+            margin: 20px 20px;
+            alignment: center;
+        }
+        .in{
+            margin-top: 10px;
+            width: 280px;
+            alignment: right;
+        }
+
+    </style>
+    <script>
+        var num1="10";
+        var num2="10";
+
+        function toBinary(a) {//二进制
+            var bin="";
+            a=parseInt(a);
+            while(a!=0){
+                bin=(a%2).toFixed()+bin;
+                a=parseInt(a/2);
+            }
+            // alert(bin);
+            return bin;
+        }
+
+        function toHex(a){//十六进制
+            var hex="";
+            a=parseInt(a);
+            while(a!=0){
+                if (a%16<10){
+                    hex=(a%16).toFixed()+hex;
+                }else if(a%16==10){
+                    hex="A"+hex;
+                }else if (a%16==11){
+                    hex="B"+hex;
+                }else if(a%16==12){
+                    hex="C"+hex;
+                }else if (a%16==13){
+                    hex="D"+hex;
+                }else if(a%16==14){
+                    hex="E"+hex;
+                }else {
+                    hex="F"+hex;
+                }
+                a=parseInt(a/16);
+            }
+            // alert(hex);
+            return hex;
+        }
+
+        function toOct(a) {//转为八进制
+            var oct="";
+            a=parseInt(a);
+            while(a!=0){
+                oct=(a%8).toFixed()+oct;
+                a=parseInt(a/8);
+            }
+            // alert(oct);
+            return oct;
+        }
+
+        function binaryToDec(str) {//二进制转为十进制
+            str=str.toString();
+            var n=1;
+            var len=str.length;
+            var dec=0;
+            for(let i=len-1;i>=0;i--){
+                var c=""+str.charAt(i);
+                dec=Number(c)*n+dec;
+                n*=2;
+            }
+            // alert(dec);
+            return dec;
+        }
+
+        function octToDec(str) {//八进制转十进制
+            str=str.toString();
+            var n=1;
+            var len=str.length;
+            var dec=0;
+            for(let i=len-1;i>=0;i--){
+                var c=""+str.charAt(i);
+                dec=Number(c)*n+dec;
+                n*=8;
+            }
+            // alert(dec);
+            return dec;
+        }
+
+        function hexToDec(str){//十六进制转十进制
+            str=str.toString();
+            var n=1;
+            var len=str.length;
+            var dec=0;
+            var ch='';
+            for(let i=len-1;i>=0;i--){
+                ch=str.charAt(i);
+                if (ch>='0'&&ch<='9'){
+                    ch=""+ch;
+                    dec=Number(ch)*n+dec;
+                    n*=16;
+                }else if(ch=='A'){
+                    dec=10*n+dec;
+                    n*=16;
+                }else if(ch=='B'){
+                    dec=11*n+dec;
+                    n*=16;
+                }else if(ch=='C'){
+                    dec=12*n+dec;
+                    n*=16;
+                }else if(ch=='D'){
+                    dec=13*n+dec;
+                    n*=16;
+                }else if(ch=='E'){
+                    dec=14*n+dec;
+                    n*=16;
+                }else {
+                    dec=15*n+dec;
+                    n*=16;
+                }
+            }
+            // alert(dec);
+            return dec;
+        }
+
+        function setNum1(obj) {
+            num1=""+obj.value;
+        }
+
+        function setNum2(obj) {
+            num2=""+obj.value;
+        }
+        function convert() {
+
+            var dec="";
+            var inText=""+document.getElementById("inText").value;
+            var result=document.getElementById("result");
+
+            if(num1=="2"){
+                dec=""+binaryToDec(inText);
+            }else if (num1=="8"){
+                dec=""+octToDec(inText);
+            }else if(num1=="16"){
+                dec=""+hexToDec(inText);
+            }else {
+                dec=""+inText;
+            }
+
+            if (num2=="2"){
+                result.innerHTML=toBinary(dec);
+            }else if (num2=="8"){
+                result.innerHTML=toOct(dec);
+            }else if(num2=="16"){
+                result.innerHTML=toHex(dec);
+            }else {
+                result.innerHTML=dec;
+            }
+
+        }
+    </script>
+</head>
+<body>
+
+<form action="/">
+    <a href="/Business">商务计算器</a><br/>
+    <a href="/Simple" >四则计算器</a><br/>
+    <a href="/Science">科学计算器</a><br/>
+    <a href="/Loan">贷款计算器</a><br/>
+    <a href="/Base">进制计算器</a>
+</form>
+
+<div class="panel" >
+    <div >
+        <h3 align="center">进制计算器</h3>
+        <hr/>
+        <p>请选择输入数字的进制：</p>
+
+        <input type="radio" name="radio1" value="2" onclick="setNum1(this)"/>二进制
+        <input type="radio" name="radio1" value="8" onclick="setNum1(this)"/>八进制
+        <input type="radio" name="radio1" value="10" checked="checked" onclick="setNum1(this)"/>十进制
+        <input type="radio" name="radio1" value="16" onclick="setNum1(this)"/>十六进制
+
+        <p>请输入数字</p>
+        <input type="text" class="in" id="inText">
+
+        <p>请选择要转为的进制</p>
+        <input type="radio" name="radio" value="2" onclick="setNum2(this)"/>二进制
+        <input type="radio" name="radio" value="8" onclick="setNum2(this)"/>八进制
+        <input type="radio" name="radio" value="10" checked="checked" onclick="setNum2(this)"/>十进制
+        <input type="radio" name="radio" value="16" onclick="setNum2(this)"/>十六进制
+
+        <br/>
+
+        <button onclick="convert()" class="button">转化</button>
+
+        <p>结果是：</p>
+        <p id="result"> </p>
+
+    </div>
+</div>
+</body>
+</html>
